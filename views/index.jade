@@ -1,0 +1,9 @@
+extends ../node_modules/jade-bootstrap/_bootstrap
+
+head
+	title = title
+block body
+	+nav-pills-justified([{text:"Home",href:"#"},{text:"Profile",href:"#"},{text:"Message",href:"#"}],0)
+	.container
+		h1= title
+		p Welcome to #{title}
