@@ -1,0 +1,22 @@
+.container {
+	background-color: #e7e7e7;
+	padding-top: 1%;
+}
+
+.navbar {
+	padding-top: 1%;
+	padding-bottom: 1%;
+}
+
+.panel-default {
+	background-color: #f8f8f8;
+}
+
+h1 {
+	color: green;
+	font-family: "Arial Rounded MT Bold", sans-serif;
+}
+
+p {
+	color: green;
+}
