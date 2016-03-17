@@ -1,0 +1,18 @@
+extends ../node_modules/jade-bootstrap/_bootstrap
+
+append styles
+	link(rel="stylesheet" href="stylesheets/custom.css")
+
+head
+	title = title
+block body
+	.container
+		+navbar("Colenso Project","dropdown_menu")
+			+nav_item("/") Home
+				+icon-success("home")
+					a (href="/")
+			+nav_item("explore", "active") Explore
+				+icon-success("search")
+					a (href="explore")
+		h1= title
+		
