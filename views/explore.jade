@@ -14,5 +14,9 @@ block body
 			+nav_item("explore", "active") Explore
 				+icon-success("search")
 					a (href="explore")
-		h1= title
-		
+		h1 #{title}
+		p Explore the #{title} database.
+		//form(name="search-query", action="/explore", method="get")
+			+input("text", "query", "Search", "", name="query")
+			+submit("Search")
+		p #{place}
