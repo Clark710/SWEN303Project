@@ -12,7 +12,7 @@ router.get('/', function(req, res) {
 /* GET search page. */
 router.get('/search', function(req, res) {
     var query = "XQUERY declare default element namespace 'http://www.tei-c.org/ns/1.0';" +
-        "for $t in (//title[. contains text '" + req.query.searchString + "'])\n" +
+        "for $t in (collection('Colenso')[. contains text '" + req.query.searchString + "'])\n" +
         "return concat('<a href=\"/file?filename=', db:path($t), '\" class=\"searchResult\">', $t, '</a>'," +
         "'<p class=\"searchResult\">', db:path($t), '</p>')";
 
