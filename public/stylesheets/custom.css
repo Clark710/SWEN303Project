@@ -8,8 +8,17 @@
 	padding-bottom: 1%;
 }
 
+.mycarousel {
+	margin: 0 auto;
+	width: 60%;
+}
+
 .panel-default {
 	background-color: #f8f8f8;
+}
+
+.nav_item {
+	width: 30%;
 }
 
 h1 {
