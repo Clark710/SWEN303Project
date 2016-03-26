@@ -22,8 +22,7 @@ router.get('/search', function(req, res) {
                 console.error(error);
             }
             else {
-                var nResults = (result.result.match(/<\/a>/g) || []).length;
-                res.render('search', { title: 'Colenso Project', results: result.result, nResults: nResults});
+                res.render('search', { title: 'Colenso Project', results: result.result});
             }
         }
     );
