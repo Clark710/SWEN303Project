@@ -1,0 +1,32 @@
+extends ../node_modules/jade-bootstrap/_bootstrap
+
+append styles
+	link(rel="stylesheet" href="stylesheets/custom.css")
+
+head
+title = title
+block body
+
+	<a href="/">
+	+img-responsive-center("images/logo.jpg")
+	</a>
+
+	.container
+		+navbar(title, "dropdown_menu")
+			+nav_item("/") Home
+				+icon-success("home")
+			+nav_item("browse") Browse
+				+icon-success("search")
+			+nav_item("/search", "active") Search
+				+icon-success("search")
+
+	br
+
+	.container
+		h1 #{title}
+		p Explore the #{title} database.
+		form(name="query", action="/search", method="get")
+			+input("text", "query", "Search", "", name="searchString")
+			+submit("Search")
+
+		!{results}

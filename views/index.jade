@@ -6,21 +6,33 @@ append styles
 head
 	title = title
 block body
-	.container
-		+navbar("Colenso Project","dropdown_menu")
-			+nav_item("/","active") Home
-				+icon-success("home")
-					a (href="index")
-			+nav_item("explore") Explore
-				+icon-success("search")
-					a (href="explore")
-		h1 #{title}
-		+panel-default("Colenso Society")
-			p The Colenso Society, Victoria University of Wellington and MTG Hawke's Bay are delighted to announce the establishment of the Colenso Project. This exciting new initiative seeks to build on the blossoming national and international interest in William Colenso’s life and ideas as the result of the William Colenso Bicentenary Celebrations in Hawke’s Bay in 2011, and a body of new publications and research.
-			p The intent of the Project is to ignite public and academic interest in Colenso’s words – published, unpublished, private letters, journals - both in Maori and English, by sharing them with the world in digital form. We envisage a hub for all things Colenso: a place to read documents in the original, explore his writing through transcriptions, and as a place to experiment with new research and interpretation methods.
-		+carousel("Carousel ID_2",[
-			{image: "images/image.jpg"},
-			{image: "images/image.jpg"},
-			{image: "images/image.jpg"},
-			{image: "images/image.jpg"}
-		])
+
+		<a href="/">
+		+img-responsive-center("images/logo.jpg")
+		</a>
+
+		.container
+			+navbar(title, "dropdown_menu")
+				+nav_item("/", "active") Home
+					+icon-success("home")
+				+nav_item("browse") Browse
+					+icon-success("search")
+				+nav_item("/search") Search
+					+icon-success("search")
+
+		br
+
+		.container
+			+panel-default("The Colenso Society")
+				p The Colenso Society, Victoria University of Wellington and MTG Hawke's Bay are delighted to announce the establishment of the Colenso Project. This exciting new initiative seeks to build on the blossoming national and international interest in William Colenso’s life and ideas as the result of the William Colenso Bicentenary Celebrations in Hawke’s Bay in 2011, and a body of new publications and research.
+				p The intent of the Project is to ignite public and academic interest in Colenso’s words – published, unpublished, private letters, journals - both in Maori and English, by sharing them with the world in digital form. We envisage a hub for all things Colenso: a place to read documents in the original, explore his writing through transcriptions, and as a place to experiment with new research and interpretation methods.
+
+		br
+
+		.container
+			.mycarousel
+				+carousel("",[
+					{image: "images/carousel1.jpg"},
+					{image: "images/carousel2.jpg"},
+					{image: "images/carousel3.jpg"}
+				])
