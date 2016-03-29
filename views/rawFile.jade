@@ -1,0 +1,42 @@
+extends ../node_modules/jade-bootstrap/_bootstrap
+
+append styles
+    link(rel="stylesheet" href="stylesheets/custom.css")
+
+head
+title = title
+
+block body
+
+    <a href="/">
+    +img-responsive-center("images/logo.jpg")
+    </a>
+
+    .container
+        +navbar(title, "dropdown_menu")
+            +nav_item("/") Home
+                +icon-success("home")
+            +nav_item("browse?type=Broughton", "active") Browse
+                +icon-success("book")
+            +nav_item("/search") Search
+                +icon-success("search")
+
+    .container
+        +navbar("Browse", "dropdown_menu")
+            +nav_item("file") Text
+                +icon-success("font")
+            +nav_item("#", "active") Raw xml
+                +icon-success("console")
+
+    br
+
+    .container
+        h1 #{title}
+        p Explore the #{title} database.
+        p This is the raw page
+        form(method="post", action="/file/download").pull-right
+            input(type="hidden", name="docs", value=docs)
+            button(type="submit").btn.btn-success Download Results
+
+        h3 #{fileName}
+        !{data}
