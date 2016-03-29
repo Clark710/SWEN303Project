@@ -4,7 +4,8 @@ append styles
     link(rel="stylesheet" href="stylesheets/custom.css")
 
 head
-title = title
+    title = title
+
 block body
 
     <a href="/">
@@ -15,8 +16,8 @@ block body
         +navbar(title, "dropdown_menu")
             +nav_item("/") Home
                 +icon-success("home")
-            +nav_item("browse", "active") Browse
-                +icon-success("search")
+            +nav_item("browse?type=Broughton", "active") Browse
+                +icon-success("book")
             +nav_item("/search") Search
                 +icon-success("search")
 
@@ -24,7 +25,33 @@ block body
 
     .container
         h1 #{title}
-        p Explore the #{title} database.
+        p
 
-        each val in place
-            li: a(href = "/file?filename=/" + val) !{val}
+        h4 Help us to grow our database!
+            +a-btn("/contribute") Contribute
+
+        +panel-default("Explore the Colenso database.")
+            p Please browse through our range of authors
+            <div class="row">
+            <div class="col-xs-3">
+            +list-group-links([{text: "Broughton", url: "?type=Broughton"},
+                {text: "Colenso", url: "?type=Colenso"},
+                {text: "Cotton", url: "?type=Cotton"},
+                {text: "Elizabeth Colenso", url: "?type=Elizabeth_Colenso"},
+                {text: "Haast", url: "?type=Haast"},
+                {text: "Hadfield", url: "?type=Hadfield"},
+                {text: "Hector", url: "?type=Hector"},
+                {text: "Hogg", url: "?type=Hogg"},
+                {text: "Holmes", url: "?type=Holmes"},
+                {text: "Hooker", url: "?type=Hooker"},
+                {text: "Kate Hadfield", url: "?type=Kate_Hadfield"},
+                {text: "McLean", url: "?type=McLean"},
+                {text: "Tamihana Te Rauparaha", url: "?type=Tamihana_Te_Rauparaha"},
+                {text: "Unknown Authors", url: "?type=unknown_author"}],
+            selected)
+            </div>
+            <div class="col-xs-6">
+            each val in place
+                li: a(href = "/file?filename=/" + val) !{val}
+            </div>
+            </div>
