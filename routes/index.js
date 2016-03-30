@@ -47,9 +47,8 @@ router.get('/search', function(req, res) {
                 console.error(error);
             }
             else {
-                var nResults = (result.result.match(/<\/a>/g) || []).length;
                 var splitlist = result.result.split("\n");
-                res.render('search', { title: 'Colenso Project', results: splitlist, nResults: nResults});
+                res.render('search', { title: 'Colenso Project', results: splitlist});
             }
         }
     );
@@ -67,9 +66,8 @@ router.get('/xquery', function(req, res) {
                 console.error(error);
             }
             else {
-                var nResults = (result.result.match(/<\/a>/g) || []).length;
                 var splitlist = result.result.split("\n");
-                res.render('xquery', { title: 'Colenso Project', results: splitlist, nResults: nResults});
+                res.render('xquery', { title: 'Colenso Project', results: splitlist});
             }
         }
     );
@@ -145,6 +143,22 @@ router.get('/download', function(req, res) {
 
             }
         });
+});
+
+/* GET contribute page. */
+router.get('/contribute', function(req, res) {
+    res.render('contribute', { title: "Colenso Project" });
+});
+
+var upload = multer();
+router.use(upload.single('file'));
+router.post('/contribute', function(req, res){
+    var path = "Colenso/unknown_author";
+    var file = req.file.buffer.toString();
+    client.execute('ADD TO ' + path + ' "' + file + '"', function(error, result){
+        console.log("Successful file upload")
+        res.redirect('browse?type=Broughton');
+    });
 });
 
 module.exports = router;
