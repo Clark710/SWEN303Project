@@ -1,0 +1,32 @@
+extends ../node_modules/jade-bootstrap/_bootstrap
+
+append styles
+    link(rel="stylesheet" href="stylesheets/custom.css")
+
+head
+    title = title
+block body
+
+    <a href="/">
+    +img-responsive-center("images/logo.jpg")
+    </a>
+
+    .container
+        +navbar(title, "dropdown_menu")
+            +nav_item("/") Home
+                +icon-success("home")
+            +nav_item("browse?type=Broughton") Browse
+                +icon-success("book")
+            +nav_item("/xquery") Search
+                +icon-success("search")
+
+    br
+
+    .container
+        h1 #{title}
+        form(action="/contribute?path=" + path, method="post", enctype="multipart/form-data")
+            input(type="file", name="file")
+            button(type="submit") Upload
+
+        br
+        p #{message}
