@@ -105,21 +105,8 @@ router.get('/file', function(req, res) {
                 name = name.replace("<title>", "");
                 name = name.replace("</title>", "");
                 fileName = req.query.filename;
-                fileUrl = query;
+                fileUrl = req.url;
                 res.render('file', { title: 'Colenso Project', fileName: name, data: result.result });
-            }
-        }
-    );
-});
-
-router.get('/changeview', function(req, res) {
-    client.execute(fileUrl,
-        function (error, result) {
-            if(error) {
-                console.error(error);
-            }
-            else {
-                res.render('file', { title: 'Colenso Project', data: result.result });
             }
         }
     );
@@ -138,44 +125,6 @@ router.get('/rawFile', function(req, res) {
             }
         }
     );
-});
-
-var storage = multer.diskStorage({
-    destination: function (req, file, callback) {
-        callback(null, '../Colenso/');
-    },
-    filename: function (req, file, callback) {
-        var extension = file.originalname.substring(file.originalname.lastIndexOf('.')+1);
-        if(extension != "xml"){
-            callback("Requires filetype to be of xml format", null);
-        }
-        else{
-            callback(null, req.body.directory + file.originalname);
-        }
-    }
-});
-
-var upload = multer({storage:storage}).single('xmlFile');
-router.post('/contribute', function(req,res){
-    upload(req,res, function(err){
-        if(err){
-            res.render('contribute', { title: 'Colenso Project', message: err})
-        }
-        else{
-            var path = "Colenso/diary/";
-            client.execute('ADD TO ' + path + '"', function (error, result) {
-                console.log(path);
-                if(error){
-                    console.error(error);
-                }
-            });
-            res.render('contribute', { title: 'Colenso Project', message: 'Successful upload of file'})
-        }
-    });
-});
-
-router.get('/contribute', function(req,res){
-    res.render('contribute', {title: 'Colenso Project', message:""})
 });
 
 /* GET download page */
