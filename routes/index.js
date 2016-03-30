@@ -6,6 +6,7 @@ var client = new basex.Session("127.0.0.1", 1984, "admin", "admin");
 client.execute("OPEN Colenso");
 
 var fileName = "";
+var fileUrl = "";
 
 /* GET home page. */
 router.get('/', function(req, res) {
@@ -35,12 +36,10 @@ router.get('/search', function(req, res) {
                     queryString += " ";
                     queryString += array[1];
                 }
-
-                console.log("QUERY: " + queryString);
             }
     }
     var query = "XQUERY declare default element namespace 'http://www.tei-c.org/ns/1.0';" +
-        "for $n in (collection('Colenso')[. contains text ' "  + queryString + "'])\n" +
+        "for $n in (collection('Colenso')[. contains text '" + queryString + "' using wildcards])" +
         " return db:path($n)";
     client.execute(query,
         function (error, result) {
@@ -106,6 +105,7 @@ router.get('/file', function(req, res) {
                 name = name.replace("<title>", "");
                 name = name.replace("</title>", "");
                 fileName = req.query.filename;
+                fileUrl = req.url;
                 res.render('file', { title: 'Colenso Project', fileName: name, data: result.result });
             }
         }
@@ -114,58 +114,37 @@ router.get('/file', function(req, res) {
 
 /* GET xml file from database. */
 router.get('/rawFile', function(req, res) {
-    var query = "XQUERY doc('Colenso/" + req.query.filename + "')";
-    client.execute(query,
+    client.execute("XQUERY declare default element namespace 'http://www.tei-c.org/ns/1.0';" +
+        "(doc('Colenso/"+fileName+"'))[1]",
         function (error, result) {
             if(error) {
                 console.error(error);
             }
             else {
-                var url_list = req.url.split('/');
-                var url = req.url.replace("/" + url_list[0], url_list[0]);
-                res.render('rawFile', { title: 'Colenso Project', data: result.result, url: url });
+                res.render('rawFile', { file: result.result });
             }
         }
     );
 });
 
-var storage = multer.diskStorage({
-    destination: function (req, file, callback) {
-        callback(null, '../Colenso/');
-    },
-    filename: function (req, file, callback) {
-        var extension = file.originalname.substring(file.originalname.lastIndexOf('.')+1);
-        if(extension != "xml"){
-            callback("Requires filetype to be of xml format", null);
-        }
-        else{
-            callback(null, req.body.directory + file.originalname);
-            //fs.mkdirSync('../Colenso/' + req.body.directory);
-        }
-    }
-});
+/* GET download page */
+router.get('/download', function(req, res) {
+    client.execute("XQUERY declare default element namespace 'http://www.tei-c.org/ns/1.0';" +
+        "(doc('Colenso/"+fileName+"'))[1]",
+        function (error, result) {
+            if(error){
+                console.error(error);
+            }
+            else {
+                res.writeHead(200, {
+                    'Content-Type': 'application/force-download','Content-disposition': 'attachment; filename=' + fileName,
+                });
 
-var upload = multer({storage:storage}).single('xmlFile');
-router.post('/contribute', function(req,res){
-    upload(req,res, function(err){
-        if(err){
-            res.render('contribute', { title: 'Colenso Project', message: err})
-        }
-        else{
-            var path = "Colenso/diary/";
-            client.execute('ADD TO ' + path + '"', function (error, result) {
-                console.log(path);
-                if(error){
-                    console.error(error);
-                }
-            });
-            res.render('contribute', { title: 'Colenso Project', message: 'Successful upload of file'})
-        }
-    });
-});
+                res.write(result.result);
+                res.end();
 
-router.get('/contribute', function(req,res){
-    res.render('contribute', {title: 'Colenso Project', message:""})
+            }
+        });
 });
 
 module.exports = router;
