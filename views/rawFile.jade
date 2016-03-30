@@ -18,25 +18,15 @@ block body
                 +icon-success("home")
             +nav_item("browse?type=Broughton", "active") Browse
                 +icon-success("book")
-            +nav_item("/search") Search
+            +nav_item("/xquery") Search
                 +icon-success("search")
-
-    .container
-        +navbar("Browse", "dropdown_menu")
-            +nav_item("file") Text
-                +icon-success("font")
-            +nav_item("#", "active") Raw xml
-                +icon-success("console")
 
     br
 
     .container
         h1 #{title}
         p Explore the #{title} database.
-        p This is the raw page
-        form(method="post", action="/file/download").pull-right
-            input(type="hidden", name="docs", value=docs)
-            button(type="submit").btn.btn-success Download Results
 
         h3 #{fileName}
-        !{data}
+        textarea(id="textArea", style = "width: 100%; height: 500px;")
+            p #{file}
