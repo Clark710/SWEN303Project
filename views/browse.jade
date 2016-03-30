@@ -18,7 +18,7 @@ block body
                 +icon-success("home")
             +nav_item("browse?type=Broughton", "active") Browse
                 +icon-success("book")
-            +nav_item("/search") Search
+            +nav_item("/xquery") Search
                 +icon-success("search")
 
     br
@@ -28,8 +28,10 @@ block body
         p
 
         h4 Help us to grow our database!
-            +a-btn("/contribute") Contribute
-
+            form(action='/contribute').pull-right
+                input(type="hidden", name="docs")
+                button(type="submit").btn.btn-success Contribute
+        br
         +panel-default("Explore the Colenso database.")
             p Please browse through our range of authors
             <div class="row">
@@ -52,6 +54,6 @@ block body
             </div>
             <div class="col-xs-6">
             each val in place
-                li: a(href = "/file?filename=/" + val) !{val}
+                p: a(href = "/file?filename=/" + val) !{val}
             </div>
             </div>

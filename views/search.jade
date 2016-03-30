@@ -17,14 +17,14 @@ block body
 				+icon-success("home")
 			+nav_item("browse?type=Broughton") Browse
 				+icon-success("book")
-			+nav_item("/search", "active") Search
+			+nav_item("/xquery", "active") Search
 				+icon-success("search")
 
 	br
 
 	.container
 		h1 #{title}
-		p Explore the #{title} database.
+		p Search the #{title} database.
 
 		form(name="query", action="/search", method="get")
 			+input("text", "query", "Text Search | e.g. Colenso", "", name="searchString")
@@ -36,4 +36,5 @@ block body
 
 		if(nResults > 0)
 			+alert-success(nResults + " results found")
-		!{results}
+		each val in results
+			p: a(href = "/file?filename=/" + val) !{val}

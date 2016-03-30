@@ -18,23 +18,18 @@ block body
                 +icon-success("home")
             +nav_item("browse?type=Broughton", "active") Browse
                 +icon-success("book")
-            +nav_item("search") Search
+            +nav_item("/xquery") Search
                 +icon-success("search")
-
-    .container
-        +navbar("Browse", "dropdown_menu")
-            +nav_item("#", "active") Text
-                +icon-success("font")
-            +nav_item("#{url}") Raw xml
-                +icon-success("console")
-
     br
 
     .container
         h1 #{title}
         p Explore the #{title} database.
 
-        form(method="post", action="/file/download").pull-right
+        form(action='rawFile?filename=').pull-right
+            input(type="hidden", name="docs", value=docs)
+            button(type="submit").btn.btn-success View Raw XML
+        form(action='/download').pull-right
             input(type="hidden", name="docs", value=docs)
             button(type="submit").btn.btn-success Download Results
 
