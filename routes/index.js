@@ -5,6 +5,8 @@ var multer = require('multer');
 var client = new basex.Session("127.0.0.1", 1984, "admin", "admin");
 client.execute("OPEN Colenso");
 
+var fileName = "";
+
 /* GET home page. */
 router.get('/', function(req, res) {
   res.render('index', { title: 'Colenso Project' });
@@ -15,26 +17,31 @@ router.get('/search', function(req, res) {
     if(req.query.searchString){
         var array = req.query.searchString.split(" ");
         var queryString = "";
-        var i = 0;
-        while(i < array.length){
-            queryString += array[i];
-            ++i;
-            if(i < array.length){
-                if(array[i] === "AND"){
-                    queryString += "' ftand '";
-                }else if(array[i] === "OR"){
+            queryString += array[0];
+            if(1 < array.length){
+                if(array[1] === "OR"){
                     queryString += "' ftor '";
-                }else if(array[i] === "NOT"){
-                    queryString += "' ftnot '";
+                    queryString += array[2];
+                }else if(array[1] === "AND"){
+                    queryString += "' ftand '";
+                    queryString += array[2];
+                }else if(array[1] === "NOT"){
+                    queryString += "' ftand ftnot '";
+                    queryString += array[2];
+                }else if(array[0] === "NOT"){
+                    queryString += "' ftand ftnot '";
+                    queryString += array[2];
+                }else{
+                    queryString += " ";
+                    queryString += array[1];
                 }
+
+                console.log("QUERY: " + queryString);
             }
-            ++i;
-        }
     }
     var query = "XQUERY declare default element namespace 'http://www.tei-c.org/ns/1.0';" +
-        "for $n in (//title[. contains text ' "  + queryString + "'])\n" +
-        " return concat('<a href=\"/file?filename=', db:path($n), '\" class=\"searchResult\">', $n, '</a>'," +
-        "'<p class=\"searchResult\">', db:path($n), '</p>')";
+        "for $n in (collection('Colenso')[. contains text ' "  + queryString + "'])\n" +
+        " return db:path($n)";
     client.execute(query,
         function (error, result) {
             if(error) {
@@ -42,7 +49,8 @@ router.get('/search', function(req, res) {
             }
             else {
                 var nResults = (result.result.match(/<\/a>/g) || []).length;
-                res.render('search', { title: 'Colenso Project', results: result.result, nResults: nResults});
+                var splitlist = result.result.split("\n");
+                res.render('search', { title: 'Colenso Project', results: splitlist, nResults: nResults});
             }
         }
     );
@@ -52,8 +60,7 @@ router.get('/search', function(req, res) {
 router.get('/xquery', function(req, res) {
     var xquery = "XQUERY declare default element namespace 'http://www.tei-c.org/ns/1.0';" +
         "for $n in " + req.query.searchString +
-        " return concat('<a href=\"/file?filename=', db:path($n), '\" class=\"searchResult\">', $n, '</a>'," +
-        "'<p class=\"searchResult\">', db:path($n), '</p>')";
+        " return db:path($n)";
 
     client.execute(xquery,
         function (error, result) {
@@ -62,7 +69,8 @@ router.get('/xquery', function(req, res) {
             }
             else {
                 var nResults = (result.result.match(/<\/a>/g) || []).length;
-                res.render('xquery', { title: 'Colenso Project', results: result.result, nResults: nResults});
+                var splitlist = result.result.split("\n");
+                res.render('xquery', { title: 'Colenso Project', results: splitlist, nResults: nResults});
             }
         }
     );
@@ -73,8 +81,7 @@ router.get("/browse",function(req,res){
     var query = "XQUERY declare default element namespace 'http://www.tei-c.org/ns/1.0';" +
         "for $n in (//title)\n" +
         "where db:path($n) contains text '" + req.query.type + "'" +
-        "return concat('<a href=\"/file?filename=', db:path($n), '\" class=\"searchResult\">', $n, '</a>'," +
-        "'<p class=\"searchResult\">', db:path($n), '</p>')";
+        "return db:path($n)";
     client.execute(query,
         function (error, result) {
             if(error){ console.error(error);}
@@ -95,10 +102,11 @@ router.get('/file', function(req, res) {
                 console.error(error);
             }
             else {
-                var fileName = result.result.match(/<title>[\s\S]*?<\/title>/)[0];
-                fileName = fileName.replace("<title>", "");
-                fileName = fileName.replace("</title>", "");
-                res.render('file', { title: 'Colenso Project', fileName: fileName, data: result.result });
+                var name = result.result.match(/<title>[\s\S]*?<\/title>/)[0];
+                name = name.replace("<title>", "");
+                name = name.replace("</title>", "");
+                fileName = req.query.filename;
+                res.render('file', { title: 'Colenso Project', fileName: name, data: result.result });
             }
         }
     );
@@ -119,6 +127,45 @@ router.get('/rawFile', function(req, res) {
             }
         }
     );
+});
+
+var storage = multer.diskStorage({
+    destination: function (req, file, callback) {
+        callback(null, '../Colenso/');
+    },
+    filename: function (req, file, callback) {
+        var extension = file.originalname.substring(file.originalname.lastIndexOf('.')+1);
+        if(extension != "xml"){
+            callback("Requires filetype to be of xml format", null);
+        }
+        else{
+            callback(null, req.body.directory + file.originalname);
+            //fs.mkdirSync('../Colenso/' + req.body.directory);
+        }
+    }
+});
+
+var upload = multer({storage:storage}).single('xmlFile');
+router.post('/contribute', function(req,res){
+    upload(req,res, function(err){
+        if(err){
+            res.render('contribute', { title: 'Colenso Project', message: err})
+        }
+        else{
+            var path = "Colenso/diary/";
+            client.execute('ADD TO ' + path + '"', function (error, result) {
+                console.log(path);
+                if(error){
+                    console.error(error);
+                }
+            });
+            res.render('contribute', { title: 'Colenso Project', message: 'Successful upload of file'})
+        }
+    });
+});
+
+router.get('/contribute', function(req,res){
+    res.render('contribute', {title: 'Colenso Project', message:""})
 });
 
 module.exports = router;
