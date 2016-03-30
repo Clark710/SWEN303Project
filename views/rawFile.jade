@@ -25,7 +25,13 @@ block body
 
     .container
         h1 #{title}
-        p Explore the #{title} database.
+
+        form(action='/changeview').pull-right
+            input(type="hidden", name="docs", value=docs)
+            button(type="submit").btn.btn-success View XML
+        form(action='/download').pull-right
+            input(type="hidden", name="docs", value=docs)
+            button(type="submit").btn.btn-success Save File
 
         h3 #{fileName}
         textarea(id="textArea", style = "width: 100%; height: 500px;")

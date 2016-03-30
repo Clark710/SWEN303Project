@@ -24,14 +24,13 @@ block body
 
     .container
         h1 #{title}
-        p Explore the #{title} database.
 
         form(action='rawFile?filename=').pull-right
             input(type="hidden", name="docs", value=docs)
             button(type="submit").btn.btn-success View Raw XML
         form(action='/download').pull-right
             input(type="hidden", name="docs", value=docs)
-            button(type="submit").btn.btn-success Download Results
-
+            button(type="submit").btn.btn-success Save File
+        br
         h3 #{fileName}
         !{data}

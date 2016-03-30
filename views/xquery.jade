@@ -33,7 +33,5 @@ block body
             +input("text", "xquery", "Xquery Search | e.g. //name", "", name="searchString")
             +submit("Search")
 
-        if(nResults > 0)
-            +alert-success(nResults + " results found")
         each val in results
             p: a(href = "/file?filename=/" + val) !{val}

@@ -25,11 +25,15 @@
 	width: 30%;
 }
 
-h1 {
+h1, h2, h3, h4 {
 	color: green;
 	font-family: "Arial Rounded MT Bold", sans-serif;
 }
 
 p {
 	color: green;
+}
+
+.containerFoot {
+	text-align: center;
 }
