@@ -26,7 +26,7 @@ block body
     .container
         h1 #{title}
 
-        form(action='/changeview').pull-right
+        form(action='javascript:history.back()').pull-right
             input(type="hidden", name="docs", value=docs)
             button(type="submit").btn.btn-success View XML
         form(action='/download').pull-right
